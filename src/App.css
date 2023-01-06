@@ -28,14 +28,26 @@
   color: #61dafb;
 }
 
-.main-visible-canvas{
+.main_visible_canvas{
   position: absolute;
+}
+
+.visible-mask-canvas{
+  position: absolute;
+  z-index: 2;
+  opacity: 0.1;
+  pointer-events: none;
 }
 
 .hidden-canvas, .original-canvas {
   visibility: hidden;
   position: absolute;
   
+}
+
+#imageContainer{
+  height: 80vh;
+  position: relative;
 }
 
   #fileinput {

@@ -18,6 +18,7 @@ class Editor extends Component {
     super(props);
     this.editorC = React.createRef();
     this.attachCanvasEvents = attachCanvasEvents.bind(this)
+    //this.applyAllMasks = throttle(this.applyAllMasks, 500)
     this.masks = []
     this.brushSettings = {
       opacity: '1',
@@ -40,31 +41,30 @@ class Editor extends Component {
   }
 
     
-  handleSwitchMasks(maskName){
+  handleSwitchMasks = (maskName) => {
     const newMask = this.masks.find((mask) => mask.effectType === maskName)
-    this.setState({activeMask: newMask})
+    if (newMask) {
+      this.setState({activeMask: newMask})
+    }
   }
 
   updateMaskColor = (maskName, maskColor) => {
     const mask = this.masks.find((mask) => mask.effectType === maskName)
-    mask.maskColor = maskColor
+    mask.drawColor = maskColor
   }
 
   updateEffectStrength = (strength) => {
       if (this.state.activeMask) {
         const mask = this.state.activeMask
         mask.effectStrength = strength
+        this.applyAllMasks()
       }
+
   }
 
   updateBrushSettings = (setting, value) => {
     this.brushSettings[setting] = value
     this.applyCurrentEffect()
-  }
-
-  applyCurrentEffect = (effect) => {
-    const activeMask = this.state.activeMask
-    activeMask.applyEffect(this.state.brushSettings, false)
   }
 
   createMasks = (canvasCreator) => {
@@ -87,10 +87,14 @@ class Editor extends Component {
   }
 
   applyAllMasks = () => {
+    if(this.canvasBusy) {return
+    }
+    this.canvasBusy = true
     this.redrawMainCanvas(this.originalImage, this.canvases.startingContext, this.canvases.finalContext, this.canvases.startingCanvas, this.canvases.finalCanvas)
     this.masks.forEach(mask => {
       mask.applyEffect()
     })
+    this.canvasBusy = false
   }
 
   initEditor = (imageObj) => {
@@ -127,28 +131,38 @@ class Editor extends Component {
                 exclusive
                 value = {this.state.activeMask && this.state.activeMask.effectType}
                 aria-label="Exposure"
-                onChange={(e) => this.handleSwitchMasks(e.value)}
+                onChange={(e, value) => this.handleSwitchMasks(value)}
               >
                 <ToggleButton value="structure" aria-label="left aligned">
                   Structure
                 </ToggleButton>
                 <ToggleButton value="overlay" aria-label="centered">
-                  <input type="color" onChange={(e) => this.updateMaskColor('colorburn',e.target.value)}/>
+                  <input type="color" onChange={(e) => this.updateMaskColor('overlay',e.target.value)}/>
                   Color Burn
                 </ToggleButton>
                 <ToggleButton value="color" aria-label="right aligned">
-                  <input type="color" onChange={(e) => this.updateMaskColor("colorreplace", e.target.value)}/>
+                  <input type="color" onChange={(e) => this.updateMaskColor("color", e.target.value)}/>
                   Color Replace
                 </ToggleButton>
               </ToggleButtonGroup>
 
               <ToggleButtonGroup
                 aria-label="device"
-              >
-                <ToggleButton value="laptop" aria-label="laptop">
+                color='primary'
+                exclusive
+                value={this.state.eraseMode ? 'erase': "brush"}
+                onChange = {(e,value)=> {
+                  if (value ==='erase') {
+                    this.setState({eraseMode: true})
+                  } else {
+                    this.setState({eraseMode: false})
+                  }
+                }}
+                >
+                <ToggleButton value="brush" aria-label="laptop">
                     Brush
                 </ToggleButton>
-                <ToggleButton value="phone" aria-label="phone">
+                <ToggleButton value="erase" aria-label="phone">
                   Erase
                 </ToggleButton>
               </ToggleButtonGroup>

@@ -17,7 +17,6 @@ export function attachCanvasEvents(finalCanvas, applyAllMasks){
   }
 
   const handleMouseDown = (e)  => {
-    makeMaskVisible()
     let {top, left} = finalCanvas.getBoundingClientRect()
 
     let lastPoint = { x: e.clientX - left , y: e.clientY - top };
