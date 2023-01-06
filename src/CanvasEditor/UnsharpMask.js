@@ -24,12 +24,12 @@ export default class UnsharpMask extends EffectMask {
       blendEffects.greyScaleCanvas(this.canvases)
       blurContext.drawImage(this.canvases.greyScaleCanvas, 0, 0)
 
-      stackBlurImage('blurCanvas', 12, this.canvasContainerRef);
+      stackBlurImage('blurCanvas', 5, this.canvasContainerRef);
       // invert the blurred image
       blurContext.globalCompositeOperation = "difference";
       blurContext.fillStyle = "white";
       blurContext.fillRect(0, 0, blurCanvas.width, blurCanvas.height);
-  
+      
     }
   
   }

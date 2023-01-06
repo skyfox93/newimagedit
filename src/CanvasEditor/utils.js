@@ -4,7 +4,7 @@ export const  hexToRGB= (hex, opacity) => {
   let  g = parseInt(hex.substring(2, 4), 16);
   let  b = parseInt(hex.substring(4, 6), 16);
 
-    let result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+    let result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
     return result;
   }
 
@@ -21,5 +21,12 @@ export function loadImageFromFile(file){
   const imageObj = new Image();
   imageObj.crossOrigin = "Anonymous";
   imageObj.src = window.URL.createObjectURL(file);
+  return imageObj
+}
+
+export function loadImageFromUrl(url){
+  const imageObj = new Image();
+  imageObj.crossOrigin = "Anonymous";
+  imageObj.src = url;
   return imageObj
 }

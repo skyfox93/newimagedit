@@ -30,23 +30,37 @@
 
 .main_visible_canvas{
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+
 }
 
 .visible-mask-canvas{
   position: absolute;
-  z-index: 2;
-  opacity: 0.1;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  opacity: 0;
   pointer-events: none;
+  height: 100%;
+
 }
 
 .hidden-canvas, .original-canvas {
   visibility: hidden;
   position: absolute;
+  width: 100%;
+
   
 }
 
+.tools-div {
+  z-index: 99;
+}
+
 #imageContainer{
-  height: 80vh;
+  height: 800px;
   position: relative;
 }
 

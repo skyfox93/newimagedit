@@ -36,7 +36,6 @@ export default class CanvasCreator {
   }
 
   getSizedCanvas(width, height) {
-    console.log(width, height)
     const canvas = document.createElement('canvas')
     this.canvasContainerRef.appendChild(canvas)
     canvas.width = width

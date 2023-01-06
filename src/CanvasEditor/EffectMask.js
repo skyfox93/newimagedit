@@ -6,7 +6,7 @@ export default class EffectMask {
 
     constructor(effectType, canvasInitializer, finalCanvas, startingCanvas, finalContext, startingContext) {
         this.effectOpacity = 1
-        this.drawColor = '#FF0000'
+        this.drawColor = '#907A7A'
         this.canvases = {
           finalCanvas: finalCanvas,
           finalContext: finalContext,
@@ -33,23 +33,36 @@ export default class EffectMask {
         }
     }
   }
+
+    fillMask = ( erase = false) => {
+      this.canvases.maskContext.fillStyle = this.drawColor
+      if (erase) {
+        this.canvases.maskContext.globalCompositeOperation = 'destination-out';
+      } else {
+        this.canvases.maskContext.globalCompositeOperation = 'source-over';
+
+      }
+      this.canvases.maskContext.fillRect(0, 0, this.canvases.maskCanvas.width, this.canvases.maskCanvas.height);
+      this.canvases.maskContext.globalCompositeOperation = 'source-over';
+    }
     
     drawToMask = (coordinates, brushSettings, eraseMode = false) => {
       let {size} = brushSettings
       const color = this.drawColor
-      console.log(coordinates,size,color)
-      const radgrad = this.canvases.maskContext.createRadialGradient(coordinates.x, coordinates.y, 1, coordinates.x, coordinates.y, size / 2);
-      radgrad.addColorStop(0, `${color}`);
+      const radgrad = this.canvases.maskContext.createRadialGradient(coordinates.x, coordinates.y, size / 2.5 , coordinates.x, coordinates.y, size / 2);
+      radgrad.addColorStop(0, `${hexToRGB(color, brushSettings.opacity)}`);
       radgrad.addColorStop(1, `${hexToRGB(color,0)}`);
-      if (eraseMode) {
-        console.log('ERASE MODE')
-        this.canvases.maskContext.globalCompositeOperation = 'destination-out';
-      }else {
-        this.canvases.maskContext.globalCompositeOperation = 'source-over'
-      }
+      
       this.canvases.maskContext.fillStyle = radgrad
-      this.canvases.maskContext.fillRect(coordinates.x - size / 2, coordinates.y - size / 2, size, size);
-      this.applyEffect(false)
+      
+      if (eraseMode) {
+        this.canvases.maskContext.globalCompositeOperation = 'destination-out';
+      }
+      // erase the previous area - this prevents multiple draws from affecting opacity
+      else{
+        this.canvases.maskContext.globalCompositeOperation = 'source-over';
+      }
+        this.canvases.maskContext.fillRect(coordinates.x - size / 2, coordinates.y - size / 2, size, size);
     }
   }
   
