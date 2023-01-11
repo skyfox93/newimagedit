@@ -21,7 +21,6 @@ export default class CanvasCreator {
     return canvases
   }
   
-
   createHiddenCanvas(dimensions) {
     if( !dimensions) {
       dimensions = this.imageDimensions
@@ -34,7 +33,7 @@ export default class CanvasCreator {
     return maskCanvas
 
   }
-
+  
   getSizedCanvas(width, height) {
     const canvas = document.createElement('canvas')
     this.canvasContainerRef.appendChild(canvas)

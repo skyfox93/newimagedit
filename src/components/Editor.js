@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import CanvasCreator from './CanvasEditor/CanvasCreator';
-import EffectMask from './CanvasEditor/EffectMask';
-import { attachCanvasEvents } from './CanvasEditor/MouseHandling';
-import UnsharpMask from './CanvasEditor/UnsharpMask';
-import { loadImageFromFile, loadImageFromUrl } from './CanvasEditor/utils';
+import CanvasCreator from '../canvasUtils/CanvasCreator';
+import EffectMask from '../canvasUtils/EffectMask';
+import { attachCanvasEvents } from '../EventHandlers/MouseHandling';
+import UnsharpMask from '../canvasUtils/UnsharpMask';
+import { loadImageFromFile, loadImageFromUrl } from '../canvasUtils/utils';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import BrushIcon from '@mui/icons-material/Brush';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, Icon, IconButton, Slider, Tab, Tabs } from '@mui/material';
+import {  Button, Card, Slide, Slider} from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Clear, Layers, LightMode, Opacity, Square } from '@mui/icons-material';
 import EffectsPanel from './EffectsPanel';
+import { handleClear, handleFill, handleSwitchMask, updateEffectStrength, updateMaskColor } from '../EventHandlers/MaskHandling';
+import BrushSettings from './BrushSettings';
 
 const CanvasContainer = React.memo((props) => {
   return (<div id='imageContainer' ref={props.canvasRef} style={{display: 'inline-block'}} ></div>)
@@ -23,8 +24,15 @@ class Editor extends Component {
     super(props);
     this.editorC = React.createRef();
     this.brushPreview = React.createRef();
+
+    // bind event handlers
     this.attachCanvasEvents = attachCanvasEvents.bind(this)
-    //this.applyAllMasks = throttle(this.applyAllMasks, 500)
+    this.handleFill = handleFill.bind(this)
+    this.handleSwitchMasks = handleSwitchMask.bind(this)
+    this.handleClear = handleClear.bind(this)
+    this.updateMaskColor = updateMaskColor.bind(this) 
+    this.updateEffectStrength = updateEffectStrength.bind(this)
+
     this.masks = []
 
     this.brushState = {
@@ -55,32 +63,10 @@ class Editor extends Component {
 
   }
 
-  activateEraser = () => {
-    this.setState({ eraseMode: true })
+  setEraseMode = (bool) => {
+    this.setState({ eraseMode: bool })
   }
 
-
-
-  handleSwitchMasks = (maskName) => {
-    const newMask = this.masks.find((mask) => mask.effectType === maskName)
-    if (newMask) {
-      this.setState({ activeMask: newMask })
-    }
-  }
-
-  updateMaskColor = (maskName, maskColor) => {
-    const mask = this.masks.find((mask) => mask.effectType === maskName)
-    mask.drawColor = maskColor
-  }
-
-  updateEffectStrength = (strength) => {
-    if (this.state.activeMask) {
-      const mask = this.state.activeMask
-      mask.effectStrength = strength
-      this.applyAllMasks()
-    }
-
-  }
 
   updateBrushSettings = (setting, value) => {
     this.setState({ brushSettings: { ...this.state.brushSettings, [setting]: value } })
@@ -138,68 +124,23 @@ class Editor extends Component {
     }
   }
 
-  handleFill = () => {
-    this.state.activeMask.fillMask(false)
-    this.applyAllMasks()
-  }
+ renderBrushPreview = () => {
+  // renders an svg circle indicating the size of the brush
 
-  handleClear = () => {
-    this.state.activeMask.fillMask(true)
-    this.applyAllMasks()
+  let brushPreviewSize = 10 
+  if (this.canvases && this.canvases.finalCanvas && this.state.brushSettings.size) {
+    const canvasRatio = (this.canvases.finalCanvas.clientWidth / this.canvases.finalCanvas.width)
+    brushPreviewSize = this.state.brushSettings.size * canvasRatio
   }
-
-effectsPanel = () => {
   return (
-    <Card className='tools-div' sx={{width: '500px'}}>
-    {this.renderAccordian('Details', 'structure')}
-    {this.renderAccordian('Color Filter', 'overlay')}
-    {this.renderAccordian('Color Replace', 'color')}
-  </Card>
+    <svg ref={this.brushPreview} id='svg' height={brushPreviewSize + 2} width={brushPreviewSize + 2} style={{ position: 'fixed', zIndex: 30, pointerEvents: 'none' }}>
+      <circle cx={1 + brushPreviewSize / 2} cy={1 + brushPreviewSize / 2} r={brushPreviewSize / 2} stroke="black" stroke-width="2" fill='none' />
+  </svg>
   )
 }
 
-brushTools = () => {
-    return (
-      <Stack direction="row" spacing={4} sx={{ alignItems: 'center' }}>
-      <ToggleButtonGroup
-            exclusive
-            value={this.state.eraseMode ? 'erase' : 'brush'}
-            onChange={(e, value) => { this.setState({ eraseMode: value === 'erase' }) }}
-          >
-            <ToggleButton
-              value='brush' >
-                <BrushIcon /> Draw
-
-            </ToggleButton>
-            <ToggleButton value='erase' > <img src="./eraser.png" /> Erase </ToggleButton>
-          </ToggleButtonGroup>
-        <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
-          <BrushIcon /> Size
-          <Slider
-            id='brsize'
-            type="range"
-            min={20} max={300}
-            defaultValue={100}
-            onChange={(e) => this.updateBrushSettings('size', e.target.value)}
-            sx={{ width: '100px' }}
-          />
-        </Stack>
-        <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center"><BrushIcon /> Opacity
-          <Slider
-            sx={{ width: '100px' }}
-            id='brstrength'
-            type="range" min={0} max={100} defaultValue={100}
-            onChange={(e) => {
-              this.updateBrushSettings('opacity', e.target.value / 100)
-            }}
-          />
-        </Stack>
-      </Stack>
-    )
-}
 
 render() {
-  const brushPreviewSize = this.canvases && this.canvases.finalCanvas && this.state.brushSettings.size ? this.state.brushSettings.size * (this.canvases.finalCanvas.clientWidth / this.canvases.finalCanvas.width) : '10'
 
   return (
     <div id="container" style={{margin: 'auto', display: 'inline-block'}}>
@@ -207,28 +148,21 @@ render() {
           <input type='file' id='fileinput' onChange={this.handleFileInput} />
           <Button component="label" for='fileinput' > <FolderOpenIcon></FolderOpenIcon>  Open New </Button>
       </Stack>
-     
-
-      <svg ref={this.brushPreview} id='svg' height={brushPreviewSize + 1} width={brushPreviewSize + 1} style={{ position: 'fixed', zIndex: 30, pointerEvents: 'none' }}>
-        <circle cx={1 + brushPreviewSize / 2} cy={1 + brushPreviewSize / 2} r={brushPreviewSize / 2} stroke="black" stroke-width="1" fill='none' />
-
-      </svg>
-      
-      {this.brushTools()}
+      {this.renderBrushPreview()}
+      <BrushSettings eraseMode = {this.state.eraseMode} setEraseMode ={this.setEraseMode} updateBrushSettings={this.updateBrushSettings} />
       <div style={{display: 'flex'}}>
         <CanvasContainer canvasRef={this.editorC} />
         <Card>
-        <EffectsPanel
-               defaultColor={defaultColor}
-               activeMask={this.state.activeMask}
-               handleSwitchMask={this.handleSwitchMasks}
-               handleFill={this.handleFill}
-               handleClear={this.handleClear}
-               updateEffectStrength={this.updateEffectStrength}
-               updateMaskColor={this.updateMaskColor}
-        />
+          <EffectsPanel
+                defaultColor={defaultColor}
+                activeMask={this.state.activeMask}
+                handleSwitchMask={this.handleSwitchMasks}
+                handleFill={this.handleFill}
+                handleClear={this.handleClear}
+                updateEffectStrength={this.updateEffectStrength}
+                updateMaskColor={this.updateMaskColor}
+          />
         </Card>
-       
       </div>
     </div>
   );

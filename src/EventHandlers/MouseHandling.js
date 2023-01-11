@@ -1,6 +1,6 @@
   /// FUNCTIONS FOR DRAWING
 import { act } from "@testing-library/react";
-import { distanceBetween, angleBetween} from "./utils";
+import { distanceBetween, angleBetween} from "../canvasUtils/utils";
 
 
 export function attachCanvasEvents(finalCanvas, applyAllMasks){
@@ -34,9 +34,14 @@ export function attachCanvasEvents(finalCanvas, applyAllMasks){
     this.brushState.isDrawing = false
   }
 
-  const moveBrushPreview = (brushPreview, x, y, brushSettings) => {
-    brushPreview.style.top = y - brushSettings.size/4
-    brushPreview.style.left = x - brushSettings.size/4
+  const moveBrushPreview = (brushPreview, x, y, brushRadius) => {
+    let brushPreviewSize = 10 
+    if (this.canvases && this.canvases.finalCanvas && this.state.brushSettings.size) {
+      const canvasRatio = (this.canvases.finalCanvas.clientWidth / this.canvases.finalCanvas.width)
+      brushPreviewSize = this.state.brushSettings.size * canvasRatio
+    }
+    brushPreview.style.top = y - brushPreviewSize/2
+    brushPreview.style.left = x - brushPreviewSize/2
   }
   
   const drawToCanvas = (mouseX, mouseY, activeMask, brushState, brushSettings) => {
@@ -59,11 +64,12 @@ export function attachCanvasEvents(finalCanvas, applyAllMasks){
   }
 
   const  handleMouseMove  = (e) => {
-      const mouseX = e.clientX
+    const mouseX = e.clientX
     const mouseY = e.clientY
     const brushPreview = this.brushPreview
     const brushSettings = this.state.brushSettings
-    moveBrushPreview(brushPreview.current, mouseX, mouseY, brushSettings)
+
+    moveBrushPreview(brushPreview.current, mouseX, mouseY, brushSettings.size)
 
     if (!this.brushState.isDrawing) {
       return
