@@ -58,7 +58,6 @@ export function attachCanvasEvents(finalCanvas, applyAllMasks){
     
   }
 
-
   const  handleMouseMove  = (e) => {
       const mouseX = e.clientX
     const mouseY = e.clientY

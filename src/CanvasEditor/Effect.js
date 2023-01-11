@@ -75,10 +75,12 @@ const BasicOverlays = {
         finalContext.globalCompositeOperation = 'source-over'
       }
       // by overlaying an inverted blured image with the original, this produces something similar to a "unsharp" effect
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "overlay", opacity)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "overlay", opacity  * 0.7)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "overlay", opacity * 0.5)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "overlay", opacity  * 0.35)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", opacity * 0.9)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", opacity)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", opacity * 0.9)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", opacity)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", opacity * 0.9)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", opacity)
 
       restoreColor(finalContext, startingCanvas)
         // this method uses a blured "negative", combines it with a position to produce an unsharp effect
