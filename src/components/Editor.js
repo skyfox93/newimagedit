@@ -13,6 +13,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import EffectsPanel from './EffectsPanel';
 import { handleClear, handleFill, handleSwitchMask, updateEffectStrength, updateMaskColor } from '../EventHandlers/MaskHandling';
 import BrushSettings from './BrushSettings';
+import { Save, Visibility } from '@mui/icons-material';
 
 const CanvasContainer = React.memo((props) => {
   return (<div id='imageContainer' ref={props.canvasRef} style={{display: 'inline-block'}} ></div>)
@@ -23,6 +24,7 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     this.editorC = React.createRef();
+    this.downloadLink = React.createRef();
     this.brushPreview = React.createRef();
 
     // bind event handlers
@@ -144,9 +146,15 @@ render() {
 
   return (
     <div id="container" style={{margin: 'auto', display: 'inline-block'}}>
-      <Stack direction='row'>
-          <input type='file' id='fileinput' onChange={this.handleFileInput} />
-          <Button component="label" for='fileinput' > <FolderOpenIcon></FolderOpenIcon>  Open New </Button>
+      <Stack direction='row' sx={{margin: '2em 0'}}>
+        
+          <input type='file' id='fileinput' onChange={this.handleFileInput} accept='image/jpeg, image/png' />
+          <Button component="label" for='fileinput' > <FolderOpenIcon></FolderOpenIcon>  Open </Button>
+          <a download id='saveLink' ref={this.downloadLink} style={{visibility: 'hidden'}}> Save </a>
+          <Button onClick={() => {
+            this.downloadLink.current.href = this.canvases.finalCanvas.toDataURL();
+            this.downloadLink.current.click()
+          }}><Save/> Download </Button>
       </Stack>
       {this.renderBrushPreview()}
       <BrushSettings eraseMode = {this.state.eraseMode} setEraseMode ={this.setEraseMode} updateBrushSettings={this.updateBrushSettings} />
