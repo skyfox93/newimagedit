@@ -1,25 +1,24 @@
 import { Accordion, AccordionDetails, AccordionSummary, Card } from "@mui/material";
-import { update } from "lodash";
 import MaskInputs from "./MaskInputs";
 
 const EffectDisplayer = (props) => (
-    
-    <Accordion  sx={{'&.Mui-expanded': {minHeight:"0", margin: '0'}}}  expanded={(props.activeMask && props.activeMask.effectType) === props.effectType} onChange={(e, expanded) => { if(expanded) {props.handleSwitchMask(props.effectType)}}}>
-    <AccordionSummary size={'small'} sx={{'&.Mui-expanded': {minHeight:"0", margin: '3px', fontWeight: 'bold'},'& .MuiAccordionSummary-content': {margin:"0.5em"}}}>
-      {props.label}
-    </AccordionSummary>
-    <AccordionDetails sx={{'&.Mui-expanded': {minHeight:"0", margin: '0'},'&button.Mui-expanded': {margin:0}, textAlign:'left'}}>
-        <MaskInputs 
-            effectType = {props.effectType}
-            updateEffectStrength = {props.updateEffectStrength}
-            updateMaskColor= {props.updateMaskColor}
-            handleFill = {props.handleFill}
-            handleClear = {props.handleClear}
-            activeMask = {props.activeMask}
-            defaultColor = {props.defaultColor}
-        /> 
-    </AccordionDetails>
-  </Accordion>
+
+    <Accordion sx={{ '&.Mui-expanded': { minHeight: "0", margin: '0' } }} expanded={(props.activeMask && props.activeMask.effectType) === props.effectType} onChange={(e, expanded) => { if (expanded) { props.handleSwitchMask(props.effectType) } }}>
+        <AccordionSummary size={'small'} sx={{ '&.Mui-expanded': { minHeight: "0", margin: '3px', fontWeight: 'bold' }, '& .MuiAccordionSummary-content': { margin: "0.5em" } }}>
+            {props.label}
+        </AccordionSummary>
+        <AccordionDetails sx={{ '&.Mui-expanded': { minHeight: "0", margin: '0' }, '&button.Mui-expanded': { margin: 0 }, textAlign: 'left' }}>
+            <MaskInputs
+                effectType={props.effectType}
+                updateEffectStrength={props.updateEffectStrength}
+                updateMaskColor={props.updateMaskColor}
+                handleFill={props.handleFill}
+                handleClear={props.handleClear}
+                activeMask={props.activeMask}
+                defaultColor={props.defaultColor}
+            />
+        </AccordionDetails>
+    </Accordion>
 )
 
 
@@ -36,27 +35,27 @@ const EffectsPanel = (props) => {
 
 
     return (
-      <Card className='tools-div' sx={{width: '500px', margin: '5px', backgroundColor: 'lightgray', alignSelf:'flex-start'}} elevation={4}>
-                <h4 className="effectTitle">
-                    Effects
-                </h4>
+        <Card className='tools-div' sx={{ width: '500px', margin: '5px', backgroundColor: 'lightgray', alignSelf: 'flex-start' }} elevation={4}>
+            <h4 className="effectTitle">
+                Effects
+            </h4>
             <EffectDisplayer
-                label = {'Details'}
+                label={'Details'}
                 effectType={'structure'}
-                {...effectProps} 
+                {...effectProps}
             />
-             <EffectDisplayer
-                label = {'Lighting Color'}
+            <EffectDisplayer
+                label={'Lighting Color'}
                 effectType={'overlay'}
-                {...effectProps} 
+                {...effectProps}
             />
-             <EffectDisplayer
-                label = {'Replace Color'}
+            <EffectDisplayer
+                label={'Replace Color'}
                 effectType={'color'}
-                {...effectProps} 
+                {...effectProps}
             />
-    </Card>
+        </Card>
     )
-  }
+}
 
-  export default EffectsPanel
+export default EffectsPanel

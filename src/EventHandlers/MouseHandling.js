@@ -1,5 +1,4 @@
   /// FUNCTIONS FOR DRAWING
-import { act } from "@testing-library/react";
 import { distanceBetween, angleBetween} from "../canvasUtils/utils";
 
 

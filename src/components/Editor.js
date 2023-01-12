@@ -1,22 +1,17 @@
 import React, { Component } from 'react';
 import CanvasCreator from '../canvasUtils/CanvasCreator';
-import EffectMask from '../canvasUtils/EffectMask';
 import { attachCanvasEvents } from '../EventHandlers/MouseHandling';
-import UnsharpMask from '../canvasUtils/UnsharpMask';
 import { loadImageFromFile, loadImageFromUrl } from '../canvasUtils/utils';
 import Stack from '@mui/material/Stack';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import BrushIcon from '@mui/icons-material/Brush';
-import {  Button, Card, Slide, Slider} from '@mui/material';
+import { Button, Card } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import EffectsPanel from './EffectsPanel';
-import { handleClear, handleFill, handleSwitchMask, updateEffectStrength, updateMaskColor } from '../EventHandlers/MaskHandling';
+import { applyAllMasks, createMasks, handleClear, handleFill, handleSwitchMask, redrawMainCanvas, updateEffectStrength, updateMaskColor } from '../EventHandlers/MaskHandling';
 import BrushSettings from './BrushSettings';
-import { Save, Visibility } from '@mui/icons-material';
+import { Save, TrendingUpSharp } from '@mui/icons-material';
 
 const CanvasContainer = React.memo((props) => {
-  return (<div id='imageContainer' ref={props.canvasRef} style={{display: 'inline-block'}} ></div>)
+  return (<div id='imageContainer' ref={props.canvasRef} style={{ display: 'inline-block' }} ></div>)
 }, (prev, next) => (prev.currentFileId === next.previousFile))
 
 const defaultColor = '#857A7A'
@@ -32,8 +27,11 @@ class Editor extends Component {
     this.handleFill = handleFill.bind(this)
     this.handleSwitchMasks = handleSwitchMask.bind(this)
     this.handleClear = handleClear.bind(this)
-    this.updateMaskColor = updateMaskColor.bind(this) 
+    this.updateMaskColor = updateMaskColor.bind(this)
     this.updateEffectStrength = updateEffectStrength.bind(this)
+    this.createMasks = createMasks.bind(this)
+    this.redrawMainCanvas = redrawMainCanvas.bind(this)
+    this.applyAllMasks = applyAllMasks.bind(this)
 
     this.masks = []
 
@@ -43,11 +41,11 @@ class Editor extends Component {
     }
     this.state = {
       brushSettings: {
-        opacity: '1',
+        opacity: 1,
         size: 100
       },
       activeMask: null,
-      eraseMode: false
+      eraseMode: true
     }
   }
 
@@ -74,37 +72,6 @@ class Editor extends Component {
     this.setState({ brushSettings: { ...this.state.brushSettings, [setting]: value } })
   }
 
-  createMasks = (canvasCreator) => {
-    let masks = ['brighten', 'structure', 'overlay', 'color',].map(effectType => {
-      let effectMask = null
-      if (effectType === 'structure') {
-        effectMask = new UnsharpMask(effectType, canvasCreator, this.canvases.finalCanvas, this.canvases.startingCanvas, this.canvases.finalContext, this.canvases.startingContext)
-      } else {
-        effectMask = new EffectMask(effectType, canvasCreator, this.canvases.finalCanvas, this.canvases.startingCanvas, this.canvases.finalContext, this.canvases.startingContext)
-      }
-      return effectMask
-    })
-    this.masks = masks
-  }
-
-  redrawMainCanvas = (originalImage, startingContext, finalContext, startingCanvas, finalCanvas) => {
-    startingContext.drawImage(originalImage, 0, 0, startingCanvas.width, startingCanvas.height);
-    finalContext.drawImage(originalImage, 0, 0, finalCanvas.width, finalCanvas.height)
-
-  }
-
-  applyAllMasks = () => {
-    if (this.canvasBusy) {
-      return
-    }
-    this.canvasBusy = true
-    this.redrawMainCanvas(this.originalImage, this.canvases.startingContext, this.canvases.finalContext, this.canvases.startingCanvas, this.canvases.finalCanvas)
-    this.masks.forEach(mask => {
-      mask.applyEffect()
-    })
-    this.canvasBusy = false
-  }
-
   initEditor = (imageObj) => {
     const canvasCreator = new CanvasCreator(this.editorC.current, [imageObj.naturalWidth, imageObj.naturalHeight])
     const canvases = canvasCreator.createMainCanvases()
@@ -126,55 +93,55 @@ class Editor extends Component {
     }
   }
 
- renderBrushPreview = () => {
-  // renders an svg circle indicating the size of the brush
+  renderBrushPreview = () => {
+    // renders an svg circle indicating the size of the brush
 
-  let brushPreviewSize = 10 
-  if (this.canvases && this.canvases.finalCanvas && this.state.brushSettings.size) {
-    const canvasRatio = (this.canvases.finalCanvas.clientWidth / this.canvases.finalCanvas.width)
-    brushPreviewSize = this.state.brushSettings.size * canvasRatio
+    let brushPreviewSize = 10
+    if (this.canvases && this.canvases.finalCanvas && this.state.brushSettings.size) {
+      const canvasRatio = (this.canvases.finalCanvas.clientWidth / this.canvases.finalCanvas.width)
+      brushPreviewSize = this.state.brushSettings.size * canvasRatio
+    }
+    return (
+      <svg ref={this.brushPreview} id='svg' height={brushPreviewSize + 2} width={brushPreviewSize + 2} style={{ position: 'fixed', zIndex: 30, pointerEvents: 'none' }}>
+        <circle cx={1 + brushPreviewSize / 2} cy={1 + brushPreviewSize / 2} r={brushPreviewSize / 2} stroke="black" stroke-width="2" fill='none' />
+      </svg>
+    )
   }
-  return (
-    <svg ref={this.brushPreview} id='svg' height={brushPreviewSize + 2} width={brushPreviewSize + 2} style={{ position: 'fixed', zIndex: 30, pointerEvents: 'none' }}>
-      <circle cx={1 + brushPreviewSize / 2} cy={1 + brushPreviewSize / 2} r={brushPreviewSize / 2} stroke="black" stroke-width="2" fill='none' />
-  </svg>
-  )
-}
 
 
-render() {
+  render() {
 
-  return (
-    <div id="container" style={{margin: 'auto', display: 'inline-block'}}>
-      <Stack direction='row' sx={{margin: '2em 0'}}>
-        
+    return (
+      <div id="container" style={{ margin: 'auto', display: 'inline-block' }}>
+        <Stack direction='row' sx={{ margin: '2em 0' }}>
+
           <input type='file' id='fileinput' onChange={this.handleFileInput} accept='image/jpeg, image/png' />
           <Button component="label" for='fileinput' > <FolderOpenIcon></FolderOpenIcon>  Open </Button>
-          <a download id='saveLink' ref={this.downloadLink} style={{visibility: 'hidden'}}> Save </a>
+          <a download id='saveLink' ref={this.downloadLink} style={{ visibility: 'hidden' }}> Save </a>
           <Button onClick={() => {
             this.downloadLink.current.href = this.canvases.finalCanvas.toDataURL();
             this.downloadLink.current.click()
-          }}><Save/> Download </Button>
-      </Stack>
-      {this.renderBrushPreview()}
-      <BrushSettings eraseMode = {this.state.eraseMode} setEraseMode ={this.setEraseMode} updateBrushSettings={this.updateBrushSettings} />
-      <div style={{display: 'flex'}}>
-        <CanvasContainer canvasRef={this.editorC} />
-        <Card>
-          <EffectsPanel
-                defaultColor={defaultColor}
-                activeMask={this.state.activeMask}
-                handleSwitchMask={this.handleSwitchMasks}
-                handleFill={this.handleFill}
-                handleClear={this.handleClear}
-                updateEffectStrength={this.updateEffectStrength}
-                updateMaskColor={this.updateMaskColor}
-          />
-        </Card>
+          }}><Save /> Download </Button>
+        </Stack>
+        {this.renderBrushPreview()}
+        <BrushSettings eraseMode={this.state.eraseMode} setEraseMode={this.setEraseMode} updateBrushSettings={this.updateBrushSettings} />
+        <div style={{ display: 'flex' }}>
+          <CanvasContainer canvasRef={this.editorC} />
+          <Card>
+            <EffectsPanel
+              defaultColor={defaultColor}
+              activeMask={this.state.activeMask}
+              handleSwitchMask={this.handleSwitchMasks}
+              handleFill={this.handleFill}
+              handleClear={this.handleClear}
+              updateEffectStrength={this.updateEffectStrength}
+              updateMaskColor={this.updateMaskColor}
+            />
+          </Card>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 }
 
 export default Editor;

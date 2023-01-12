@@ -12,7 +12,7 @@ import { Stack } from "@mui/system"
               <Slider
                 id='brstrength'
                 sx={{ width: '100px' }}
-                type="range" min={0} max={100} defaultValue={100}
+                type="range" min={0} max={100} defaultValue={0}
                 onChange={(e) => {
                   props.updateEffectStrength(e.target.value / 100)
       
