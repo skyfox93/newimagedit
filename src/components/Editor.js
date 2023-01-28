@@ -8,7 +8,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import EffectsPanel from './EffectsPanel';
 import { applyAllMasks, createMasks, handleClear, handleFill, handleSwitchMask, redrawMainCanvas, updateEffectStrength, updateMaskColor } from '../EventHandlers/MaskHandling';
 import BrushSettings from './BrushSettings';
-import { Save, TrendingUpSharp } from '@mui/icons-material';
+import { Save } from '@mui/icons-material';
 
 const CanvasContainer = React.memo((props) => {
   return (<div id='imageContainer' ref={props.canvasRef} style={{ display: 'inline-block' }} ></div>)
