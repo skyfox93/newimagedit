@@ -42,7 +42,7 @@ import { Stack } from "@mui/system"
               value='brush' >
                 <Brush/> Draw
             </ToggleButton>
-            <ToggleButton value='erase' > <img src="./newimagedit/eraser.png" /> Erase </ToggleButton>
+            <ToggleButton value='erase' > <img src="./eraser.png" /> Erase </ToggleButton>
           </ToggleButtonGroup>
           </div>
         )
