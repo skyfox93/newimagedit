@@ -7,18 +7,6 @@ import { Stack } from "@mui/system"
 const BrushSettings = (props) => {
     return (
       <Stack direction="row" spacing={4} sx={{ alignItems: 'center' }}>
-      <ToggleButtonGroup
-            exclusive
-            value={props.eraseMode ? 'erase' : 'brush'}
-            onChange={(e, value) => { props.setEraseMode(value === 'erase')}}
-        >
-            <ToggleButton
-              value='brush' >
-                <Brush /> Draw
-
-            </ToggleButton>
-            <ToggleButton value='erase' > <img src="./eraser.png" /> Erase </ToggleButton>
-          </ToggleButtonGroup>
         <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
           <Brush /> Size
           <Slider

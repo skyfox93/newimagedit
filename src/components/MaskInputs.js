@@ -1,5 +1,5 @@
-import { Clear, Layers } from "@mui/icons-material"
-import { Button, Slider } from "@mui/material"
+import { Brush, Clear, Layers } from "@mui/icons-material"
+import { Button, Slider, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Stack } from "@mui/system"
 
  const MaskInputs  = (props) => {
@@ -12,7 +12,7 @@ import { Stack } from "@mui/system"
               <Slider
                 id='brstrength'
                 sx={{ width: '100px' }}
-                type="range" min={0} max={100} defaultValue={0}
+                type="range" min={0} max={100} defaultValue={100}
                 onChange={(e) => {
                   props.updateEffectStrength(e.target.value / 100)
       
@@ -33,6 +33,17 @@ import { Stack } from "@mui/system"
               <Button size='small' id="clear" onClick={props.handleClear}><Clear/> Clear  </Button>
             </Stack>
             </Stack>
+            <ToggleButtonGroup
+            exclusive
+            value={props.eraseMode ? 'erase' : 'brush'}
+            onChange={(e, value) => { props.setEraseMode(value === 'erase')}}
+        >
+            <ToggleButton
+              value='brush' >
+                <Brush/> Draw
+            </ToggleButton>
+            <ToggleButton value='erase' > <img src="./newimagedit/eraser.png" /> Erase </ToggleButton>
+          </ToggleButtonGroup>
           </div>
         )
 }

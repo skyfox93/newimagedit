@@ -45,7 +45,7 @@ class Editor extends Component {
         size: 100
       },
       activeMask: null,
-      eraseMode: true
+      eraseMode: false
     }
   }
 
@@ -124,12 +124,14 @@ class Editor extends Component {
           }}><Save /> Download </Button>
         </Stack>
         {this.renderBrushPreview()}
-        <BrushSettings eraseMode={this.state.eraseMode} setEraseMode={this.setEraseMode} updateBrushSettings={this.updateBrushSettings} />
+        <BrushSettings updateBrushSettings={this.updateBrushSettings} />
         <div style={{ display: 'flex' }}>
           <CanvasContainer canvasRef={this.editorC} />
           <Card>
             <EffectsPanel
               defaultColor={defaultColor}
+              eraseMode={this.state.eraseMode}
+              setEraseMode={this.setEraseMode}
               activeMask={this.state.activeMask}
               handleSwitchMask={this.handleSwitchMasks}
               handleFill={this.handleFill}
