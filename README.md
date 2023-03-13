@@ -1,70 +1,20 @@
-# Getting Started with Create React App
+## PhotoEditing using canvas blend modes in React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a proof of concept for an image filtering app using canvas blend modes. While webGl is the standard for creating image filters with on the web, WebGL filters are complex to implement and maintain. Canvas blend modes are a fun alternative.
 
-## Available Scripts
+## Features
+ Users can "paint" with detail, light, or color
 
-In the project directory, you can run:
+The "detail" filter implements what is functionally an "unsharp" mask - by overlaying combining a blurred negative with the original, the contrast of the details is enhanced. A detailed look at this implementation can be found in [https://medium.com/skylar-salernos-tech-blog/mimicking-googles-pop-filter-using-canvas-blend-modes-d7da83590d1a](this blog post). Painting detail into a selected area allows users to avoid oversharpening areas they wish to remain smooth, such as skin or a blurred background
+ 
+ The light overlay is a powerful filter that can change the color, brighten the image, darken the image, depending on the shade used. Users can "paint" different colors onto different areas of the photo to give a two toned effect or to selectively brighten areas of an image, such as someones face.
 
-### `npm start`
+The color replace filter works by a wholesale "coloring in" of the photo with the users chosen color. However, by adjusting the opacity of the effect, the user regains some control over the strength of the effect. Because this "coloring in" uses a simple HSL hue shift, and its not the best at creating "natural" looking re-color compared to an operation designed specifically for this purpose, but it can still create some fun effect.
+  
+ For more detail on the HSL color scale, see my blog post on (specifying colors on the web)[https://medium.com/skylar-salernos-tech-blog/specifying-colors-on-the-web-11aeed3f5d6]
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Running the App
+This app is built with React. To Run it:
+1) Run `npm build` to install React and other dependencies
+2) Run `npm start` to start a local server
+3) To generate a build, run `npm build`
