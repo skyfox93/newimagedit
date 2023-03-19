@@ -63,6 +63,7 @@ const BasicOverlays = {
     },
   
     brightness: ({finalCanvas, finalContext}, brightness ) => {
+      brightness = brightness * 255
       const brightnessColor = `rgb(${brightness}, ${brightness}, ${brightness})`
       BasicOverlays.applyColorOverlay(finalCanvas, finalContext, brightnessColor , 'overlay', 1)
     },

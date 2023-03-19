@@ -4,19 +4,20 @@ import { hexToRGB } from "./utils"
 
 export default class EffectMask {
 
-    constructor(effectType, canvasInitializer, finalCanvas, startingCanvas, finalContext, startingContext) {
+    constructor(effectType, canvasInitializer, canvases, initialStrength) {
+      
         this.drawColor = '#907A7A'
         this.canvases = {
-          finalCanvas: finalCanvas,
-          finalContext: finalContext,
-          startingCanvas: startingCanvas,
-          startingContext: startingContext,
-          maskCanvas: canvasInitializer.createHiddenCanvas([startingCanvas.width, startingCanvas.height])            
+          finalCanvas: canvases.finalCanvas,
+          finalContext: canvases.finalContext,
+          startingCanvas: canvases.startingCanvas,
+          startingContext: canvases.startingContext,
+          maskCanvas: canvasInitializer.createHiddenCanvas([canvases.startingCanvas.width, canvases.startingCanvas.height])            
         }
         this.canvases.maskContext = this.canvases.maskCanvas.getContext('2d')
         this.canvasContainerRef = canvasInitializer.canvasContainerRef
         this.effectType = effectType
-        this.effectStrength = 0
+        this.effectStrength = initialStrength
     }
 
     applyEffect =  (replaceOriginal = true) => {

@@ -75,8 +75,8 @@ class Editor extends Component {
   initEditor = (imageObj) => {
     const canvasCreator = new CanvasCreator(this.editorC.current, [imageObj.naturalWidth, imageObj.naturalHeight])
     const canvases = canvasCreator.createMainCanvases()
-    this.redrawMainCanvas(imageObj, canvases.startingContext, canvases.finalContext, canvases.startingCanvas, canvases.finalCanvas)
     this.canvases = canvases
+    this.redrawMainCanvas()
     this.createMasks(canvasCreator)
     this.applyAllMasks()
     let structureMask = this.masks.find(mask => mask.effectType === 'structure')

@@ -44,6 +44,11 @@ const EffectsPanel = (props) => {
                 Effects
             </h4>
             <EffectDisplayer
+                label={'Brightness'}
+                effectType={'brightness'}
+                {...effectProps}
+            />
+            <EffectDisplayer
                 label={'Details'}
                 effectType={'structure'}
                 {...effectProps}
