@@ -76,18 +76,20 @@ const BasicOverlays = {
         finalContext.globalCompositeOperation = 'source-over'
       }
       // by overlaying an inverted blured image with the original, this produces something similar to a "unsharp" effect
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", opacity * 0.9)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", opacity)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", opacity * 0.9)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", opacity)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", opacity * 0.9)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", opacity)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light",  0.9)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", 1)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", 0.9)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light", 1)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "soft-light", 0.9)
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "soft-light")
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, startingCanvas, 'source-over', 1- opacity)
 
       restoreColor(finalContext, startingCanvas)
+
         // this method uses a blured "negative", combines it with a position to produce an unsharp effect
     }, 
 
-    replaceOriginal: ({startingContext, finalCanvas, startingCanvas}) => {
+    replaceOriginal: ({startingContext, finalCanvas, startingCanvas}, opacity = 1) => {
       // replace the original image with the transformed image
       startingContext.drawImage(finalCanvas, 0,0, startingCanvas.width, startingCanvas.height )
     }
