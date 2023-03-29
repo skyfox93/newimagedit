@@ -6,10 +6,8 @@ const BasicOverlays = {
       context.globalAlpha =opacity ;
       if (!rectArea) {
         context.fillRect(0, 0, canvas.width, canvas.height);
-
       } else {
         context.fillRect(...rectArea);
-
       }
       // clean up
       context.globalCompositeOperation = 'source-over';
