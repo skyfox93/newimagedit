@@ -29,7 +29,7 @@ import { Stack } from "@mui/system"
             }
       
             <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
-              <Button size='small' id="fill" onClick={props.handleFill}><Layers/> Fill  </Button>
+              <Button size='small' id="fill" onClick={props.handleFill}><Layers/> Apply  </Button>
               <Button size='small' id="clear" onClick={props.handleClear}><Clear/> Clear  </Button>
             </Stack>
             </Stack>

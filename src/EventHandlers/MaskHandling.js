@@ -60,7 +60,6 @@ export function createMasks(canvasCreator) {
 
 export function redrawMainCanvas() {
   const originalImage = this.originalImage
-  console.log(this.canvases)
   const {startingContext, finalContext, startingCanvas, finalCanvas} = this.canvases
   startingContext.drawImage(originalImage, 0, 0, startingCanvas.width, startingCanvas.height);
   finalContext.drawImage(originalImage, 0, 0, finalCanvas.width, finalCanvas.height)
