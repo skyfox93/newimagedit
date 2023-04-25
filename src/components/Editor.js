@@ -51,7 +51,7 @@ class Editor extends Component {
 
   componentDidMount() {
     console.log('mounted')
-    const image = loadImageFromUrl('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80')
+    const image = loadImageFromUrl('./example-image.jpeg')
     image.onload = () => {
       console.log('imageLoaded')
       this.originalImage = image
