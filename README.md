@@ -1,6 +1,16 @@
 ## PhotoEditing using canvas blend modes in React
 
-This is a proof of concept for an image filtering app using canvas blend modes. While webGl is the standard for creating image filters with on the web, WebGL filters are complex to implement and maintain. Canvas blend modes are a fun alternative.
+This is a proof of concept for an image filtering app using canvas blend modes.
+
+![Screen Shot 2023-04-25 at 7 07 18 PM](https://user-images.githubusercontent.com/14415867/234436121-47cd87b1-a3a7-4b1e-81a2-da5b1f0c55c2.png)
+
+
+
+
+https://user-images.githubusercontent.com/14415867/234437531-1a350e89-2810-4b7c-9420-7dc210881434.mov
+
+
+
 
 ## Features
  Users can "paint" with detail, light, or color
