@@ -5,7 +5,10 @@ This is a proof of concept for an image filtering app using canvas blend modes.
 ![Screen Shot 2023-04-25 at 7 07 18 PM](https://user-images.githubusercontent.com/14415867/234436121-47cd87b1-a3a7-4b1e-81a2-da5b1f0c55c2.png)
 
 
-https://user-images.githubusercontent.com/14415867/234436524-74d54711-5c01-4312-bd8a-b93057ef2d87.mov
+
+
+https://user-images.githubusercontent.com/14415867/234437531-1a350e89-2810-4b7c-9420-7dc210881434.mov
+
 
 
 
