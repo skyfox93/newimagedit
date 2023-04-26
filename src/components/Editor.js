@@ -51,7 +51,7 @@ class Editor extends Component {
 
   componentDidMount() {
     console.log('mounted')
-    const image = loadImageFromUrl('./example-image.jpeg')
+    const image = loadImageFromUrl(`${process.env.PUBLIC_URL}/example-image.jpeg`)
     image.onload = () => {
       console.log('imageLoaded')
       this.originalImage = image

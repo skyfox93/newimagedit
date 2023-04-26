@@ -34,7 +34,7 @@ export function updateEffectStrength(strength) {
 
 
 export function createMasks(canvasCreator) {
-  let masks = ['brightness', 'structure', 'overlay', 'color',].map(effectType => {
+  let masks = ['structure', 'brightness', 'overlay', 'color',].map(effectType => {
     let effectMask = null
     if (effectType === 'structure') {
       effectMask = new UnsharpMask(

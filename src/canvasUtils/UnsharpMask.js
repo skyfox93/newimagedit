@@ -1,6 +1,7 @@
 import EffectMask from './EffectMask'
 import { blendEffects } from './Effect'
 import stackBlurImage from './blurFunction'
+import { fx } from './glfx'
 
 export default class UnsharpMask extends EffectMask {
 
@@ -11,25 +12,12 @@ export default class UnsharpMask extends EffectMask {
     }
   
     initalizeUnsharpCanvases = () => {
-      const blurCanvas  = this.canvasInitializer.createHiddenCanvas()
-      blurCanvas.id = 'blurCanvas'
-      const greyScaleCanvas =  this.canvasInitializer.createHiddenCanvas()
-      const blurContext = blurCanvas.getContext('2d')
-      const greyScaleContext = greyScaleCanvas.getContext('2d')
-      this.canvases.greyScaleCanvas = greyScaleCanvas
-      this.canvases.greyScaleContext = greyScaleContext
-      this.canvases.blurCanvas = blurCanvas
-      this.canvases.blurContext = blurContext
-      this.canvases.greyScaleContext.drawImage(this.canvases.startingCanvas, 0, 0)
-      blendEffects.greyScaleCanvas(this.canvases)
-      blurContext.drawImage(this.canvases.greyScaleCanvas, 0, 0)
+      let fxCanvas = fx.canvas()
+      let texture = fxCanvas.texture(this.canvases.startingCanvas)
+      fxCanvas.draw(texture).unsharpMask(20, 1).update()
+      this.canvases.greyScaleCanvas = fxCanvas
+    
 
-      stackBlurImage('blurCanvas', 10, this.canvasContainerRef);
-      // invert the blurred image
-      blurContext.globalCompositeOperation = "difference";
-      blurContext.fillStyle = "white";
-      blurContext.fillRect(0, 0, blurCanvas.width, blurCanvas.height);
-      
     }
   
   }

@@ -1,3 +1,4 @@
+
 const BasicOverlays = {
 
     applyColorOverlay: (canvas, context, overlayColor, blendMode, opacity, rectArea) => {
@@ -73,10 +74,12 @@ const BasicOverlays = {
         finalContext.drawImage(startingCanvas, 0,0)
         finalContext.globalCompositeOperation = 'source-over'
       }
-      // by overlaying an inverted blured image with the original, this produces something similar to a "unsharp" effect
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "overlay",  0.9)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "overlay", 0.65)
-      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, startingCanvas, 'source-over', 1- opacity)
+      // // by overlaying an inverted blured image with the original, this produces something similar to a "unsharp" effect
+      // BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, blurCanvas, "overlay",  0.9)
+      // BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, "overlay", 0.65)
+      // BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, startingCanvas, 'source-over', 1- opacity)
+      
+      BasicOverlays.applyCanvasOverlay(finalCanvas, finalContext, greyScaleCanvas, 'source-over', opacity)
 
       restoreColor(finalContext, startingCanvas)
 
