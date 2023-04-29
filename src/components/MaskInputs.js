@@ -1,4 +1,4 @@
-import { Brush, Clear, Layers } from "@mui/icons-material"
+import { Brush, Clear, FormatColorFill, Layers } from "@mui/icons-material"
 import { Button, Slider, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Stack } from "@mui/system"
 
@@ -27,23 +27,25 @@ import { Stack } from "@mui/system"
               )
               : null
             }
-      
-            <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
-              <Button size='small' id="fill" onClick={props.handleFill}><Layers/> Apply  </Button>
-              <Button size='small' id="clear" onClick={props.handleClear}><Clear/> Clear  </Button>
             </Stack>
-            </Stack>
+            <Stack direction={'row'} spacing={2}>
             <ToggleButtonGroup
             exclusive
             value={props.eraseMode ? 'erase' : 'brush'}
+            color='primary'
             onChange={(e, value) => { props.setEraseMode(value === 'erase')}}
         >
-            <ToggleButton
-              value='brush' >
-                <Brush/> Draw
-            </ToggleButton>
-            <ToggleButton value='erase' > <img src="./eraser.png" /> Erase </ToggleButton>
-          </ToggleButtonGroup>
+              <ToggleButton
+                value='brush' >
+                  <Brush/> 
+              </ToggleButton>
+              <ToggleButton value='erase' > <img src="./eraser.png" />  </ToggleButton>
+            </ToggleButtonGroup>
+            <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
+                <Button size='small' id="fill" onClick={props.handleFill}><FormatColorFill/> Fill Mask  </Button>
+                <Button size='small' id="clear" onClick={props.handleClear}><Clear/> Clear Mask  </Button>
+            </Stack>
+            </Stack>
           </div>
         )
 }
