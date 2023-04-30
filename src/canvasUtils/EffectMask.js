@@ -50,7 +50,7 @@ export default class EffectMask {
       let {size} = brushSettings
       const color = this.drawColor
       const radgrad = this.canvases.maskContext.createRadialGradient(coordinates.x, coordinates.y, size / 2.5 , coordinates.x, coordinates.y, size / 2);
-      radgrad.addColorStop(0, `${hexToRGB(color, brushSettings.opacity)}`);
+      radgrad.addColorStop(0, `${hexToRGB(color, brushSettings.opacity/5)}`);
       radgrad.addColorStop(1, `${hexToRGB(color,0)}`);
       
       this.canvases.maskContext.fillStyle = radgrad

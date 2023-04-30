@@ -50,8 +50,8 @@ export function attachCanvasEvents(finalCanvas, applyAllMasks){
 
     const dist = distanceBetween(brushState.lastPoint, coordinates);
     const angle = angleBetween(brushState.lastPoint, coordinates);
-    if (dist > brushSettings.size/4) {
-      for (var i = 0; i < dist; i+=brushSettings.size/4) {
+    if (dist > brushSettings.size/10) {
+      for (var i = 0; i < dist; i+=brushSettings.size/10) {
         let x = brushState.lastPoint.x + (Math.sin(angle) * i);
         let y = brushState.lastPoint.y + (Math.cos(angle) * i);
         activeMask.drawToMask({x:x, y:y},brushSettings, this.state.eraseMode)
