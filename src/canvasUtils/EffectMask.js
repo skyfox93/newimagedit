@@ -19,6 +19,7 @@ export default class EffectMask {
         this.effectType = effectType
         this.effectStrength = initialStrength
         this.points = []
+        this.futurePoints = []
     }
 
     applyEffect =  (replaceOriginal = true) => {
@@ -35,8 +36,9 @@ export default class EffectMask {
     }
   }
 
-    startDrawing = (point, size, opacity) => {
-        this.points.push({points: [point], size, color: this.drawColor, opacity})
+    startDrawing = (point, size, opacity, eraseMode) => {
+        this.points.push({points: [point], size, color: this.drawColor, opacity, eraseMode})
+        this.futurePoints = []
     }
 
     fillMask = ( erase = false) => {
@@ -51,46 +53,60 @@ export default class EffectMask {
       this.canvases.maskContext.fillRect(0, 0, this.canvases.maskCanvas.width, this.canvases.maskCanvas.height);
       this.canvases.maskContext.globalCompositeOperation = 'source-over';
     }
-    
+
+    drawHistory = () => {
+      const ctx = this.canvases.maskContext
+      this.canvases.maskContext.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, this.canvases.maskCanvas.width, this.canvases.maskCanvas.height);
+      this.points.forEach(pointbatch => {
+        if (pointbatch.eraseMode) {
+            ctx.globalCompositeOperation = 'destination-out';
+          } else {
+            ctx.globalCompositeOperation = 'source-over'
+          }
+        pointbatch.points.forEach((point)=>{
+          
+          const radgrad2 = this.canvases.maskContext.createRadialGradient(point.x, point.y, pointbatch.size / 2.5 , point.x, point.y, pointbatch.size / 2);
+          radgrad2.addColorStop(0, `${hexToRGB(pointbatch.color,pointbatch.opacity === 1 ? 1 : pointbatch.opacity/3)}`);
+          radgrad2.addColorStop(1, `${hexToRGB(pointbatch.color,0)}`);
+          ctx.fillStyle=radgrad2
+          this.canvases.maskContext.fillRect(point.x - pointbatch.size / 2, point.y - pointbatch.size / 2, pointbatch.size, pointbatch.size);
+        })
+
+      })
+    }
+
+    undo = () => {
+      if (this.points.length >0 ) {
+        this.futurePoints.push(this.points.pop())
+        this.drawHistory()
+      }
+    }
+
+    redo = () => {
+      if (this.futurePoints.length > 0) {
+        this.points.push(this.futurePoints.pop())
+        this.drawHistory()
+      }
+    }
+
     drawToMask = (coordinates, brushSettings, eraseMode = false) => {
       let {size} = brushSettings
       const color = this.drawColor
       const ctx = this.canvases.maskContext
-
-   
-
-
-
-      
+      this.points[this.points.length - 1].points.push(coordinates);
       if (eraseMode) {
+        this.canvases.maskContext.globalCompositeOperation = 'destination-out';
+      } else {
+        ctx.globalCompositeOperation = 'source-over'
+      }
         const radgrad = this.canvases.maskContext.createRadialGradient(coordinates.x, coordinates.y, size / 2.5 , coordinates.x, coordinates.y, size / 2);
-        radgrad.addColorStop(0, `${hexToRGB(color, brushSettings.opacity/10)}`);
+        radgrad.addColorStop(0, `${hexToRGB(color, brushSettings.opacity === 1 ? 1 : brushSettings.opacity/3)}`);
         radgrad.addColorStop(1, `${hexToRGB(color,0)}`);
         ctx.fillStyle= radgrad
 
-        this.canvases.maskContext.globalCompositeOperation = 'destination-out';
         this.canvases.maskContext.fillRect(coordinates.x - size / 2, coordinates.y - size / 2, size, size);
+     
       }
-      // erase the previous area - this prevents multiple draws from affecting opacity
-      else{
-        this.canvases.maskContext.globalCompositeOperation = 'source-over';
-        ctx.clearRect(0, 0, this.canvases.maskCanvas.width, this.canvases.maskCanvas.height);
-        this.points[this.points.length - 1].points.push(coordinates);
-        this.points.forEach(pointbatch => {
-          ctx.beginPath();
-          ctx.lineWidth = pointbatch.size * 0.75;
-          ctx.lineJoin = ctx.lineCap = 'round';
-          ctx.shadowBlur = pointbatch.size/3;
-          ctx.shadowColor = `${hexToRGB(pointbatch.color|| '#000000', pointbatch.opacity)}`
-          ctx.strokeStyle= `${hexToRGB(pointbatch.color|| '#000000', pointbatch.opacity)}`
-          ctx.moveTo(pointbatch.points[0].x, pointbatch.points[0].y);
-          pointbatch.points.forEach((point)=>{
-            ctx.lineTo(point.x, point.y);
-          })
-          ctx.stroke()
-        })
-
-      }
-    }
   }
   

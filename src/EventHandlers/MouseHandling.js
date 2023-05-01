@@ -18,7 +18,7 @@ export function attachCanvasEvents(finalCanvas, applyAllMasks){
     let {top, left} = finalCanvas.getBoundingClientRect()
     let lastPoint = mousePointsToCanvasPoints(finalCanvas, { x: e.clientX - left , y: e.clientY - top });
     this.brushState.lastPoint = lastPoint
-    this.state.activeMask.startDrawing(this.brushState.lastPoint, this.state.brushSettings.size, this.state.brushSettings.opacity) 
+    this.state.activeMask.startDrawing(this.brushState.lastPoint, this.state.brushSettings.size, this.state.brushSettings.opacity, this.state.eraseMode) 
 
     this.brushState.isDrawing = true
   };

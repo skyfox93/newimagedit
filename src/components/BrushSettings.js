@@ -1,11 +1,12 @@
-import { Brush } from "@mui/icons-material"
-import { Slider, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { Brush, RedoOutlined, UndoOutlined } from "@mui/icons-material"
+import { Button, Slider, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Stack } from "@mui/system"
 
 
 
 const BrushSettings = (props) => {
-    return (
+  return (
+    <Stack direction='column'>
       <Stack direction="row" spacing={4} sx={{ alignItems: 'center' }}>
         <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
           <Brush /> Size
@@ -29,7 +30,25 @@ const BrushSettings = (props) => {
           />
         </Stack>
       </Stack>
-    )
+      <Stack direction='row'>
+        <ToggleButtonGroup
+          exclusive
+          value={props.eraseMode ? 'erase' : 'brush'}
+          color='primary'
+          onChange={(e, value) => { props.setEraseMode(value === 'erase') }}
+        >
+          <ToggleButton
+            value='brush' >
+            <Brush />
+          </ToggleButton>
+          <ToggleButton value='erase' > <img src="./eraser.png" />  </ToggleButton>
+        </ToggleButtonGroup>
+        <Button color='primary' onClick={props.undo}> <UndoOutlined /> Undo Brush </Button>
+        <Button color='primary' onClick={props.redo}> <RedoOutlined /> Redo Brush </Button>
+      </Stack>
+    </Stack>
+
+  )
 }
 
 export default BrushSettings
