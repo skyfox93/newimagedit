@@ -9,8 +9,6 @@ const EffectDisplayer = (props) => (
         </AccordionSummary>
         <AccordionDetails sx={{ '&.Mui-expanded': { minHeight: "0", margin: '0' }, '&button.Mui-expanded': { margin: 0 }, textAlign: 'left' }}>
             <MaskInputs
-                setEraseMode ={props.setEraseMode}
-                eraseMode = {props.eraseMode}
                 effectType={props.effectType}
                 updateEffectStrength={props.updateEffectStrength}
                 updateMaskColor={props.updateMaskColor}
